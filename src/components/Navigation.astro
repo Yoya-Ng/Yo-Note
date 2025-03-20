@@ -1,8 +1,25 @@
 ---
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
+  { name: "Blog", href: "/blog" },
+  { name: "Tags", href: "/tags" },
+  { name: "demo", href: "/demo" },
+];
+
+const currentPath = Astro.url.pathname; // 取得當前頁面路徑
 ---
-<div class="nav-links">
-    <a href="/">Home</a>
-    <a href="/about">About</a>
-    <a href="/blog">Blog</a>
-    <a href="/tags">tags</a>
-</div>
+
+{
+  navLinks.map(({ name, href }) => (
+    <a href={href} class={`rounded-md px-3 py-2 text-sm font-medium ${currentPath === href ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`} aria-current={currentPath === href ? "page" : undefined}>
+      {name}
+    </a>
+  ))
+}
+
+<!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+<!-- <a href="/" class="rounded-md px-3 py-2 text-sm font-medium bg-gray-900 text-white" aria-current="page">Home</a> -->
+<!-- <a href="/about" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About</a> -->
+<!-- <a href="/blog" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Blog</a> -->
+<!-- <a href="/tags" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">tags</a> -->

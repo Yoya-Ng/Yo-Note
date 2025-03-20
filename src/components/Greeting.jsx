@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 
-export default function Greeting({messages}) {
+export default function Greeting({ messages }) {
 
   const randomMessage = () => messages[(Math.floor(Math.random() * messages.length))];
 
@@ -8,10 +8,12 @@ export default function Greeting({messages}) {
 
   return (
     <div>
-      <h3>{greeting}! Thank you for visiting!</h3>
-      <button onClick={() => setGreeting(randomMessage())}>
-        New Greeting
-      </button>
+      <h1 class="text-3xl font-bold underline">
+        <button onClick={() => setGreeting(randomMessage())}>
+          {greeting}
+        </button>
+        ! Welcome to my Note Dev!
+      </h1>
     </div>
   );
 }

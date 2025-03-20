@@ -1,6 +1,6 @@
 # other
+https://docs.astro.build/zh-tw
 
-https://app.netlify.com/
+https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
 
-
-https://docs.astro.build/zh-tw/tutorial/5-astro-api/2/
+https://yo-note.netlify.app

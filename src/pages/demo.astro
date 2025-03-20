@@ -1,0 +1,11 @@
+---
+const imageSrc = "https://source.unsplash.com/random/800x600";
+---
+
+<div class="relative w-64 h-64">
+  <!-- 骨架屏 -->
+  <div class="absolute inset-0 bg-gray-300 animate-pulse" id="skeleton"></div>
+
+  <!-- 圖片 -->
+  <img src={imageSrc} alt="Loading example" class="w-full h-full object-cover rounded-lg shadow-lg" onload="document.getElementById('skeleton').style.display = 'none';" />
+</div>
