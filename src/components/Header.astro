@@ -5,6 +5,16 @@ import Navigation from "./Navigation.astro";
 import ThemeIcon from "./ThemeIcon.astro";
 ---
 
+<script>
+  setInterval(() => {
+    const text = document.getElementById("changing-logo");
+    if (text) {
+      text.style.color = text.style.color === "white" ? "black" : "white";
+      text.style.transition = "color 1s ease-in-out";
+    }
+  }, 1000);
+</script>
+
 <!-- 
 <header>
   <nav>
@@ -14,9 +24,9 @@ import ThemeIcon from "./ThemeIcon.astro";
   <Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
 </header> -->
 <header>
-  <nav class="bg-linear-to-t from-gray-950/50 to-gray-950">
+  <nav class="relative bg-linear-to-t from-gray-950/30 to-gray-950">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
+      <div class="flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button-->
           <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
@@ -43,6 +53,7 @@ import ThemeIcon from "./ThemeIcon.astro";
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex shrink-0 items-center">
             <svg class="animate-spin motion-reduce:hidden" viewBox="0 0 24 24"></svg>
+            <span id="changing-logo" class="font-bold text-white">My Company</span>
             <!-- <img class="h-8 w-auto" src="" alt="Your Company" /> -->
           </div>
           <div class="hidden sm:ml-6 sm:block">

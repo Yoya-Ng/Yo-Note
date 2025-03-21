@@ -1,11 +1,13 @@
----
-const imageSrc = "https://source.unsplash.com/random/800x600";
----
+<script>
+  setInterval(() => {
+    const text = document.getElementById("changing-text");
+    if (text) {
+      text.style.color = text.style.color === "black" ? "white" : "black";
+      text.style.transition = "color 1s ease-in-out";
+    }
+  }, 1000);
+</script>
 
-<div class="relative w-64 h-64">
-  <!-- 骨架屏 -->
-  <div class="absolute inset-0 bg-gray-300 animate-pulse" id="skeleton"></div>
-
-  <!-- 圖片 -->
-  <img src={imageSrc} alt="Loading example" class="w-full h-full object-cover rounded-lg shadow-lg" onload="document.getElementById('skeleton').style.display = 'none';" />
+<div class="flex h-screen items-center justify-center bg-gray-800">
+  <h1 id="changing-text" class="text-4xl font-bold">Color Changing Text</h1>
 </div>
