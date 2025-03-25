@@ -1,0 +1,12 @@
+---
+import ApiRequest from "../components/react/ApiRequest";
+import Greeting from "../components/react/Greeting";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Demo Page";
+---
+
+<BaseLayout title={title} pageTitle={title}>
+  <Greeting client:only="react" />
+  <ApiRequest client:only="react" />
+</BaseLayout>

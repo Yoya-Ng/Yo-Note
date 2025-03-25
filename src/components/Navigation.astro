@@ -6,8 +6,10 @@ const navLinks = [
   // { name: "PORTFOLIO", href: "/tags" },
   // { name: "PRICING", href: "/demo" },
   { name: "BLOG", href: "/blog" },
-  { name: "PAGES", href: "/tags" },
-  { name: "CONTACT", href: "/contact" },
+  // { name: "PAGES", href: "/tags" },
+  // { name: "CONTACT", href: "/contact" },
+  // { name: "MINIGAMES", href: "/minigames" },
+  { name: "DEMO", href: "/examplePage" },
 ];
 
 const currentPath = Astro.url.pathname; // 取得當前頁面路徑
@@ -15,7 +17,7 @@ const currentPath = Astro.url.pathname; // 取得當前頁面路徑
 
 {
   navLinks.map(({ name, href }) => (
-    <a href={href} class={`rounded-md px-3 py-2 text-sm font-medium ${currentPath === href ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`} aria-current={currentPath === href ? "page" : undefined}>
+    <a href={href} class={`rounded-md px-3 py-2 text-sm font-medium ${currentPath === href ? "bg-gray-500 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`} aria-current={currentPath === href ? "page" : undefined}>
       {name}
     </a>
   ))

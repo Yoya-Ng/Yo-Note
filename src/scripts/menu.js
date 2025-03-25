@@ -36,3 +36,11 @@ document.addEventListener("click", function (event) {
     menu.classList.add("hidden");
   }
 });
+
+window.addEventListener("load", () => {
+  document.body.classList.remove("loading");
+  document.getElementById("loading-screen").classList.add("hidden");
+  setTimeout(() => {
+    document.getElementById("loading-screen").remove();
+  }, 500); // 0.5 秒後移除 DOM
+});

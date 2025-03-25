@@ -1,6 +1,6 @@
 ---
 import Welcome from "../components/Welcome.astro";
-import Layout from "../layouts/Layout.astro";
+// import Layout from "../layouts/Layout.astro";
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 
@@ -47,46 +47,16 @@ const textCase = "navy";
 
 <BaseLayout title={title} pageTitle={pageTitle}>
   <!-- 使用<slot />呼叫以下內容 -->
-  <h2>... and my new Astro site!</h2>
-
-  <p>I am working through Astro's introductory tutorial. This is the second page on my website, and it's the first one I built myself!</p>
-
-  <p>This site will update as I complete more of the tutorial, so keep checking back and see how my journey is going!</p>
-  <p>Here are a few facts about me:</p>
-
-  <!-- JavaScript表示式 -->
-  <ul>
-    <li>My name is {identity.firstName}.</li>
-    <li>I live in {identity.country} and I work as a {identity.occupation}.</li>
-    {
-      identity.hobbies.length >= 2 && (
-        <li>
-          Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}
-        </li>
-      )
-    }
-  </ul>
-  <p>My skills are:</p>
-  <ul>
-    {skills.map((skill) => <li class="skill">{skill}</li>)}
-  </ul>
-
-  <!-- 有條件渲染元素 -->
-  {happy && <p>I am happy to be learning Astro!</p>}
-
-  {finished && <p>I finished this tutorial!</p>}
-
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
+  <h1 class="text-5xl font-bold text-gray-800 dark:text-white">關於我</h1>
+  <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
+    你好！我是熱愛技術與創新的開發者，目前正在使用
+    <span class="font-semibold text-blue-500">Astro</span>
+    和
+    <span class="font-semibold text-teal-500">Tailwind CSS</span>
+    持續建置我的個人網站。
+  </p>
+  <p class="mt-2 text-lg text-gray-600 dark:text-gray-300 max-w-2xl">我喜歡學習新的技術，特別是前端開發、使用者體驗設計，以及網站效能優化。我希望透過這個網站記錄我的學習過程，並與大家分享我的開發經驗。</p>
+  <p class="mt-2 text-lg text-gray-600 dark:text-gray-300 max-w-2xl">未來，我計劃加入更多內容，包括技術文章、專案展示，甚至是一些有趣的實驗性功能。如果你對我的網站有任何建議，歡迎與我交流！</p>
+  <br />
+  <a href="/" class="mt-6 px-6 py-3 text-lg font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition"> 返回首頁 → </a>
 </BaseLayout>

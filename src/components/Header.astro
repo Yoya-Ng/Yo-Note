@@ -1,6 +1,6 @@
 ---
-import Greeting from "./Greeting";
-import Hamburger from "./Hamburger.astro";
+import Greeting from "./react/Greeting";
+// import Hamburger from "./Hamburger.astro";
 import Navigation from "./Navigation.astro";
 import ThemeIcon from "./ThemeIcon.astro";
 import logo from "../image/image.jpg";
@@ -54,7 +54,7 @@ import logo from "../image/image.jpg";
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex shrink-0 items-center">
             <svg class="animate-spin motion-reduce:hidden" viewBox="0 0 24 24"></svg>
-            <span id="changing-logo" class="font-bold text-white">My Company</span>
+            <a href="/" id="changing-logo" class="font-bold text-white">My Company</a>
             <!-- <img class="h-8 w-auto" src="" alt="Your Company" /> -->
           </div>
           <div class="hidden sm:ml-6 sm:block">
