@@ -1,4 +1,15 @@
 declare module 'astro:content' {
+	interface Render {
+		'.mdx': Promise<{
+			Content: import('astro').MarkdownInstance<{}>['Content'];
+			headings: import('astro').MarkdownHeading[];
+			remarkPluginFrontmatter: Record<string, any>;
+			components: import('astro').MDXInstance<{}>['components'];
+		}>;
+	}
+}
+
+declare module 'astro:content' {
 	export interface RenderResult {
 		Content: import('astro/runtime/server/index.js').AstroComponentFactory;
 		headings: import('astro').MarkdownHeading[];
@@ -147,11 +158,75 @@ declare module 'astro:content' {
 	};
 
 	type DataEntryMap = {
-		"blog": Record<string, {
+		"about": Record<string, {
+  id: string;
+  body?: string;
+  collection: "about";
+  data: InferEntrySchema<"about">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"authors": Record<string, {
+  id: string;
+  body?: string;
+  collection: "authors";
+  data: InferEntrySchema<"authors">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"blog": Record<string, {
   id: string;
   body?: string;
   collection: "blog";
   data: InferEntrySchema<"blog">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"docs": Record<string, {
+  id: string;
+  body?: string;
+  collection: "docs";
+  data: InferEntrySchema<"docs">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"home": Record<string, {
+  id: string;
+  body?: string;
+  collection: "home";
+  data: InferEntrySchema<"home">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"indexCards": Record<string, {
+  id: string;
+  body?: string;
+  collection: "indexCards";
+  data: InferEntrySchema<"indexCards">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"poetry": Record<string, {
+  id: string;
+  body?: string;
+  collection: "poetry";
+  data: InferEntrySchema<"poetry">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"recipes": Record<string, {
+  id: string;
+  body?: string;
+  collection: "recipes";
+  data: InferEntrySchema<"recipes">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"terms": Record<string, {
+  id: string;
+  body?: string;
+  collection: "terms";
+  data: InferEntrySchema<"terms">;
   rendered?: RenderedContent;
   filePath?: string;
 }>;
@@ -160,5 +235,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	export type ContentConfig = typeof import("../src/content.config.js");
+	export type ContentConfig = typeof import("../src/content/config.js");
 }
