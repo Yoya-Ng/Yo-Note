@@ -12,15 +12,7 @@
   "name": "Note",
   "url": "/note"
 },
-{
-"name": "Docs",
-"url": "/docs"
-},
 
-{
-"name": "Poetry",
-"url": "/poetry"
-},
 {
 "name": "Index Cards",
 "url": "/index-cards"
