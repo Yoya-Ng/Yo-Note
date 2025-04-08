@@ -18,6 +18,10 @@
 "url": "/blog"
 },
 {
+"name": "Note",
+"url": "/note"
+},
+{
 "name": "Recipes",
 "url": "/recipes"
 },

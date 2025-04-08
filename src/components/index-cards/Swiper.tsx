@@ -56,7 +56,11 @@ const ConversationSwiper = ({ cards }: Props) => {
         {cards.map((card, index) => (
           <SwiperSlide key={index}>
             <div className="col-10 sm:col-8 md:col-6 mx-auto p-4 my-12 min-h-64 text-center content-center glass rounded-lg">
-              <h3>{card}</h3>
+              {card.split('/').map((line, i) => (
+                <SwiperSlide key={i}>
+                  <h4>{line}</h4>
+                </SwiperSlide>
+              ))}
             </div>
           </SwiperSlide>
         ))}

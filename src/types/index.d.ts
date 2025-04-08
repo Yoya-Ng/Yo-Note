@@ -6,21 +6,25 @@ export type GenericEntry = CollectionEntry<CollectionKey>;
 export type AboutEntry = CollectionEntry<"about">;
 export type AuthorsEntry = CollectionEntry<"authors">;
 export type BlogEntry = CollectionEntry<"blog">;
+export type NoteEntry = CollectionEntry<"note">;
 export type DocsEntry = CollectionEntry<"docs">;
 export type HomeEntry = CollectionEntry<"home">;
 export type IndexCardsEntry = CollectionEntry<"indexCards">;
 export type PoetryEntry = CollectionEntry<"poetry">;
 export type RecipesEntry = CollectionEntry<"recipes">;
 export type TermsEntry = CollectionEntry<"terms">;
+export type CalendarEntry = CollectionEntry<"calendar">;
 
 export type SearchableEntry =
   | AboutEntry
   | AuthorsEntry
   | BlogEntry
+  | NoteEntry
   | DocsEntry
   | PoetryEntry
   | RecipesEntry
-  | TermsEntry;
+  | TermsEntry
+  | CalendarEntry;
 
 export type SocialLinks = {
   discord?: string;

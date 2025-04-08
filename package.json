@@ -33,6 +33,7 @@
     "prettier-plugin-tailwindcss": "^0.4.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react-calendar": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
     "react-lite-youtube-embed": "^2.3.52",

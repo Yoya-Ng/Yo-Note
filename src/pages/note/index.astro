@@ -1,0 +1,26 @@
+---
+import CollectionLayout from "@components/note/CollectionLayout.astro";
+import { getTaxaMultiset, getTaxa } from "@lib/taxonomyParser";
+import { getEntries, getIndex } from "@lib/contentParser";
+import { sortByDate } from "@lib/sortFunctions";
+import type { NoteEntry } from "@/types";
+import config from "@/config/config.json";
+
+const { slug } = Astro.params;
+const currentPageIndex = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
+
+const entryIndex = (await getIndex("note")) as NoteEntry;
+const entries = (await getEntries("note", sortByDate)) as NoteEntry[];
+
+const allCategories = await getTaxaMultiset("note", "categories");
+const categories = await getTaxa("note", "categories");
+const tags = await getTaxa("note", "tags");
+
+const indexOfLastEntry = currentPageIndex * config.settings.note_pagination;
+const indexOfFirstEntry = indexOfLastEntry - config.settings.note_pagination;
+const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
+
+const pageCount: number = Math.ceil(entries.length / config.settings.note_pagination);
+---
+
+<CollectionLayout entryIndex={entryIndex} entries={currentEntries} categories={categories} tags={tags} allCategories={allCategories} pageIndex={currentPageIndex} pageCount={pageCount} />

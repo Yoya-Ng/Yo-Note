@@ -23,13 +23,4 @@ const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
 const pageCount: number = Math.ceil(entries.length / config.settings.blog_pagination);
 ---
 
-<!-- 
-<CollectionLayout
-  entryIndex={entryIndex}
-  entries={currentEntries}
-  categories={categories}
-  tags={tags}
-  allCategories={allCategories}
-  pageIndex={currentPageIndex}
-  pageCount={pageCount}
-/> -->
+<CollectionLayout entryIndex={entryIndex} entries={currentEntries} categories={categories} tags={tags} allCategories={allCategories} pageIndex={currentPageIndex} pageCount={pageCount} />

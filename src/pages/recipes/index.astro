@@ -16,10 +16,5 @@ const indexOfFirstEntry = indexOfLastEntry - config.settings.recipe_pagination;
 const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
 ---
 
-<!-- 暫時用不到 --><!-- 
-<CollectionLayout
-  entryIndex={entryIndex}
-  entries={currentEntries}
-  pageIndex={currentPageIndex}
-  pageCount={pageCount}
-/> -->
+<!-- 暫時用不到 -->
+<CollectionLayout entryIndex={entryIndex} entries={currentEntries} pageIndex={currentPageIndex} pageCount={pageCount} />
