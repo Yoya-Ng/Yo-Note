@@ -1,7 +1,7 @@
 {
   "site": {
-    "title": "astro",
-    "base_url": "https://janedoe.com",
+    "title": "My Blog",
+    "base_url": "",
     "base_path": "/"
   },
 

@@ -1,6 +1,6 @@
 ---
 title: Tutorials
 description: This is the docs
-image: "@assets/placeholder.png"
+image: ""
 draft: false
 ---
