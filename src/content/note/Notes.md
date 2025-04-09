@@ -1,6 +1,6 @@
 ---
-title: Notes-for-Java
-description: "Notes-for-Java description"
+title: Notes
+description: "Notes description"
 date: 2024-11-25
 image: ""
 imageAlt: Profile of Emmy Noether
