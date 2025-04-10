@@ -50,13 +50,6 @@
             }
           ]
         },
-        "image": {
-          "type": "string"
-        },
-        "imageAlt": {
-          "type": "string",
-          "default": "image"
-        },
         "hideToc": {
           "type": "boolean",
           "default": false

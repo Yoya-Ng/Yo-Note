@@ -82,8 +82,8 @@ const docs = defineCollection({
     searchable.extend({
       pubDate: z.date().optional(),
       modDate: z.date().optional(),
-      image: image().optional(),
-      imageAlt: z.string().default("image"),
+      // image: image().optional(),
+      // imageAlt: z.string().default("image"),
       hideToc: z.boolean().default(false),
       hideNav: z.boolean().default(false),
     }),
