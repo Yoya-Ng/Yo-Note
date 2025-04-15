@@ -24,7 +24,8 @@ export type SearchableEntry =
   | PoetryEntry
   | RecipesEntry
   | TermsEntry
-  | CalendarEntry;
+  | CalendarEntry
+;
 
 export type SocialLinks = {
   discord?: string;

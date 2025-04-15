@@ -9,6 +9,7 @@ import remarkToc from "remark-toc";
 import config from "./src/config/config.json";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
+import vue from '@astrojs/vue';
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,7 +19,7 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true
   },
-  integrations: [react(), sitemap(), tailwind({
+  integrations: [react(), vue(), sitemap(), tailwind({
     config: {
       applyBaseStyles: false
     }
