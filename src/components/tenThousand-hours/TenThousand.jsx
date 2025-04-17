@@ -6,10 +6,12 @@ export default function TenThousandHoursCalculator() {
     const everyDay = [1, 2, 3, 4, 5, 6, 7];
     const [activities, setActivities] = useState([
         { id: 1, name: "嬰兒", category: "日常生活", hoursPerSession: 24, daysPerWeek: 7, startAge: 0, endAge: 6, showInReport: false, color: "bg-green-200" },
-        { id: 2, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 6, endAge: 80, showInReport: false, color: "bg-yellow-200" },
-        { id: 3, name: "上學", category: "日常生活", hoursPerSession: 8, daysPerWeek: 5, startAge: 6, endAge: 23, showInReport: false, color: "bg-red-200" },
-        { id: 4, name: "吃飯", category: "日常生活", hoursPerSession: 3, daysPerWeek: 7, startAge: 6, endAge: 23, showInReport: false, color: "bg-yellow-200" },
-        { id: 5, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
+        { id: 2, name: "退休", category: "日常生活", hoursPerSession: 24, daysPerWeek: 7, startAge: 65, endAge: 80, showInReport: false, color: "bg-green-200" },
+        { id: 3, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 6, endAge: 80, showInReport: false, color: "bg-yellow-200" },
+        { id: 4, name: "吃飯", category: "日常生活", hoursPerSession: 3, daysPerWeek: 7, startAge: 6, endAge: 80, showInReport: false, color: "bg-yellow-200" },
+        { id: 5, name: "上學", category: "日常生活", hoursPerSession: 8, daysPerWeek: 5, startAge: 6, endAge: 23, showInReport: false, color: "bg-red-200" },
+        { id: 5, name: "上班", category: "工作", hoursPerSession: 8, daysPerWeek: 5, startAge: 23, endAge: 65, showInReport: false, color: "bg-red-200" },
+        { id: 6, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
     ]);
     const [newActivity, setNewActivity] = useState({
         name: "",
