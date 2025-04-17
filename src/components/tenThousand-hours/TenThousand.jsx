@@ -10,8 +10,8 @@ export default function TenThousandHoursCalculator() {
         { id: 3, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 6, endAge: 80, showInReport: false, color: "bg-yellow-200" },
         { id: 4, name: "吃飯", category: "日常生活", hoursPerSession: 3, daysPerWeek: 7, startAge: 6, endAge: 80, showInReport: false, color: "bg-yellow-200" },
         { id: 5, name: "上學", category: "日常生活", hoursPerSession: 8, daysPerWeek: 5, startAge: 6, endAge: 23, showInReport: false, color: "bg-red-200" },
-        { id: 5, name: "上班", category: "工作", hoursPerSession: 8, daysPerWeek: 5, startAge: 23, endAge: 65, showInReport: false, color: "bg-red-200" },
-        { id: 6, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
+        { id: 6, name: "上班", category: "工作", hoursPerSession: 8, daysPerWeek: 5, startAge: 23, endAge: 65, showInReport: false, color: "bg-red-200" },
+        { id: 7, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
     ]);
     const [newActivity, setNewActivity] = useState({
         name: "",
@@ -336,7 +336,9 @@ export default function TenThousandHoursCalculator() {
                                         ? <span className="text-green-600 dark:text-green-400">✓ 專家級</span>
                                         : <span className="text-red-600 dark:text-red-400">✗ 新手小白</span>}</td>
                                     <td className="p-3 ">
-                                        <button onClick={() => handleRemoveActivity(activity.id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200">
+                                        <button
+                                            onClick={() => handleRemoveActivity(activity.id)}
+                                            className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200">
                                             刪除
                                         </button>
                                     </td>
