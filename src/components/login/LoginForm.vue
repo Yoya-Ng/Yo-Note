@@ -29,7 +29,7 @@
                            v-model="username"
                            type="text"
                            required
-                           class="bg-bg-s dark:bg-darkmode-bg-s w-full pl-10 pr-4 py-3 border border-border dark:border-darkmode-border rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
+                           class="bg-bg-s dark:bg-darkmode-bg-s w-full pl-10 pr-4 py-3 border border-border dark:border-darkmode-border rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary "
                            placeholder="請輸入您的帳號" />
                 </div>
             </div>
@@ -102,7 +102,7 @@
                 </div>
 
                 <div class="text-sm">
-                    <a href="/forgot-password"
+                    <a href="/loginForgot"
                        class="text-primary hover:underline">忘記密碼?</a>
                 </div>
             </div>
@@ -173,7 +173,7 @@
             <!-- 註冊連結 -->
             <div class="text-center text-sm">
                 還沒有帳號?
-                <a href="/login_new"
+                <a href="/loginNew"
                    class="text-primary font-medium hover:underline">立即註冊</a>
             </div>
         </form>

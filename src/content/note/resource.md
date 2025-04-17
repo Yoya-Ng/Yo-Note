@@ -6,7 +6,7 @@ image: ""
 imageAlt: Profile of Emmy Noether
 categories: [Mathematics]
 author: Yo H.
-tags: [biography, algebra]
+tags: [Sql, Java, Cloud]
 ---
 
 ## 推薦的免費 MySQL 平台整理（2025 最新）

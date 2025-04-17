@@ -5,6 +5,10 @@ image: "@assets/profile/avatar.png"
 draft: false
 ---
 
-你好！我是熱愛技術與創新的開發者，目前正在使用 Astro 和 Tailwind CSS 和 React 持續建置我的個人網站。
-我喜歡學習新的技術。我希望透過這個網站記錄我的學習過程，並與大家分享我的開發經驗。
-未來，我計劃加入更多內容，包括技術文章、專案展示，甚至是一些有趣的實驗性功能。如果你對我的網站有任何建議，歡迎與我交流！
+歡迎來到這個部落格！這裡記錄著我在開發、學習與生活中的一些想法與筆記。
+整個網站是以 Astro 搭配 Tailwind CSS 建構前端，後端則由 Spring Boot 提供 API 支援。
+目前仍持續調整與更新中，也會逐步增加新功能與內容。
+
+Welcome to this blog! Here you'll find notes and thoughts from my journey through development, learning, and daily life.
+The site is built using Astro and Tailwind CSS on the frontend, with backend APIs powered by Spring Boot.
+It’s still evolving and being improved over time, with more features and content on the way.

@@ -6,7 +6,7 @@ image: ""
 imageAlt: Profile of Emmy Noether
 categories: [Mathematics]
 author: Yo H.
-tags: [biography, algebra]
+tags: [Other]
 ---
 
 # 什麼是物件導向？

@@ -1,12 +1,12 @@
 ---
-title: Notes
-description: "Notes description"
+title: Markdown
+description: "Markdown description"
 date: 2024-11-25
 image: ""
 imageAlt: Profile of Emmy Noether
 categories: [Mathematics]
 author: Yo H.
-tags: [biography, algebra]
+tags: [Markdown]
 ---
 
 - [標題](#標題)

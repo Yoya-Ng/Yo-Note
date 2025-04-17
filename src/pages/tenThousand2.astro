@@ -1,0 +1,33 @@
+---
+import BaseLayout from "@components/base/BaseLayout.astro";
+import ProjectList from "@components/tenThousand-hours/ProjectList.jsx";
+import AddProjectForm from "@components/tenThousand-hours/AddProjectForm.jsx";
+import TimeChart from "@components/tenThousand-hours/TimeChart.jsx";
+import TimeEntryForm from "@components/tenThousand-hours/TimeEntryForm.jsx";
+
+const title = "一萬小時追蹤";
+---
+
+<BaseLayout title={title}>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8">一萬小時追蹤</h1>
+
+    <div class="mt-8 bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold mb-4">記錄時間</h2>
+      <TimeEntryForm client:only="react" />
+    </div>
+    <br />
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">我的項目</h2>
+        <ProjectList client:only="react" />
+        <AddProjectForm client:only="react" />
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">項目進度</h2>
+        <TimeChart client:only="react" />
+      </div>
+    </div>
+  </main>
+</BaseLayout>

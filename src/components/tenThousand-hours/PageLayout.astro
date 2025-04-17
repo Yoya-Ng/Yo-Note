@@ -1,0 +1,13 @@
+---
+import BaseLayout from "@components/base/BaseLayout.astro";
+import TenThousand from "./TenThousand";
+import TenThousand2 from "./TenThousand2";
+
+const { title } = Astro.props;
+let changeView = false;
+---
+
+<BaseLayout title={title}>
+  <TenThousand client:load />
+  <!-- <TenThousand2 client:load /> -->
+</BaseLayout>

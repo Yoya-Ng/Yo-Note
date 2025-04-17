@@ -6,7 +6,7 @@ image: ""
 imageAlt: Profile of Emmy Noether
 categories: [Mathematics]
 author: Yo H.
-tags: [biography, algebra]
+tags: [Cloud, Java]
 ---
 
 ## ☁️ 使用 Neon 建立 PostgreSQL 雲端資料庫（含 Spring Boot 教學）

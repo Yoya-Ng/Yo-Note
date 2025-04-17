@@ -6,7 +6,7 @@ image: ""
 imageAlt: Profile of Emmy Noether
 categories: [Mathematics]
 author: Yo H.
-tags: [biography, algebra]
+tags: [Java]
 ---
 
 - [什麼是 OOP 物件導向？](#什麼是-oop-物件導向)
