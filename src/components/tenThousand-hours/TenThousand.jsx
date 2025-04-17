@@ -27,6 +27,7 @@ export default function TenThousandHoursCalculator() {
     // Calculate total hours per activity and percentages
     const calculateStats = () => {
         const hoursInLife = lifeLength * 365.25 * 24;
+        const dayInLife = lifeLength * 365.25;
         const updatedActivities = activities.map((activity) => {
             const yearsActive = Math.min(activity.endAge, lifeLength) - Math.max(activity.startAge, 0);
             const weeksActive = yearsActive * 52;
@@ -45,13 +46,18 @@ export default function TenThousandHoursCalculator() {
         // Calculate unallocated time
         const allocatedHours = updatedActivities.reduce((sum, act) => sum + act.totalHours, 0);
         const unallocatedHours = hoursInLife - allocatedHours;
+        const unallocatedDay = unallocatedHours / 24;
+        const unallocatedYears = unallocatedDay / 365.25
         const unallocatedPercentage = ((unallocatedHours / hoursInLife) * 100).toFixed(2);
 
         return {
             activities: updatedActivities,
             unallocatedHours,
+            unallocatedDay,
+            unallocatedYears,
             unallocatedPercentage,
             hoursInLife,
+            dayInLife,
         };
     };
 
@@ -122,7 +128,7 @@ export default function TenThousandHoursCalculator() {
                                 min="1" max="120" />
                             <span className="ml-2">歲</span>
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">* 根據計算，你一生中大約有 {Math.round(stats.hoursInLife).toLocaleString()} 小時</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">* 你一生中大約有 {Math.round(stats.hoursInLife).toLocaleString()} 小時 or {Math.round(stats.dayInLife).toLocaleString()} 天</div>
                     </div>
 
                     {/* Add New Activity */}
@@ -352,7 +358,7 @@ export default function TenThousandHoursCalculator() {
                                 <td className="p-3">-</td>
                                 <td className="p-3">-</td>
                                 <td className="p-3">-</td>
-                                <td className="p-3 font-semibold">{Math.round(stats.unallocatedHours).toLocaleString()}</td>
+                                <td className="p-3 font-semibold">{Math.round(stats.unallocatedHours).toLocaleString()} 時 <br /> {Math.round(stats.unallocatedDay).toLocaleString()} 天 <br /> {Math.round(stats.unallocatedYears).toLocaleString()} 年</td>
                                 <td className="p-3">{stats.unallocatedPercentage}%</td>
                                 <td className="p-3">-</td>
                                 <td className="p-3">-</td>
