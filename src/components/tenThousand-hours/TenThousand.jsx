@@ -171,7 +171,7 @@ export default function TenThousandHoursCalculator() {
                                         if (newActivity.startAge >= newActivity.endAge) {
                                             setNewActivity({
                                                 ...newActivity,
-                                                endAge: e.target.value
+                                                endAge: +e.target.value + 1
                                             })
                                         }
                                     }}
@@ -298,7 +298,7 @@ export default function TenThousandHoursCalculator() {
                                             onChange={(e) => handleActivityChange(activity.id, "startAge", filteringNumbers(e.target.value, 0, lifeLength - 1))}
                                             onBlur={(e) => {
                                                 if (activity.startAge >= activity.endAge) {
-                                                    handleActivityChange(activity.id, "endAge", e.target.value)
+                                                    handleActivityChange(activity.id, "endAge", +e.target.value + 1)
                                                 }
                                             }}
                                             min="0" max={activity.endAge} />
