@@ -5,9 +5,11 @@ export default function TenThousandHoursCalculator() {
     const [lifeLength, setLifeLength] = useState(80);
     const everyDay = [1, 2, 3, 4, 5, 6, 7];
     const [activities, setActivities] = useState([
-        { id: 1, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 0, endAge: 80, showInReport: false, color: "bg-gray-200" },
-        { id: 2, name: "學校", category: "日常生活", hoursPerSession: 8, daysPerWeek: 5, startAge: 6, endAge: 18, showInReport: false, color: "bg-yellow-200" },
-        { id: 3, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
+        { id: 1, name: "嬰兒", category: "日常生活", hoursPerSession: 24, daysPerWeek: 7, startAge: 0, endAge: 6, showInReport: false, color: "bg-green-200" },
+        { id: 2, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 6, endAge: 80, showInReport: false, color: "bg-yellow-200" },
+        { id: 3, name: "上學", category: "日常生活", hoursPerSession: 8, daysPerWeek: 5, startAge: 6, endAge: 23, showInReport: false, color: "bg-red-200" },
+        { id: 4, name: "吃飯", category: "日常生活", hoursPerSession: 3, daysPerWeek: 7, startAge: 6, endAge: 23, showInReport: false, color: "bg-yellow-200" },
+        { id: 5, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
     ]);
     const [newActivity, setNewActivity] = useState({
         name: "",
@@ -192,7 +194,7 @@ export default function TenThousandHoursCalculator() {
                                     onBlur={(e) => {
                                         setNewActivity({
                                             ...newActivity,
-                                            endAge: filteringNumbers(e.target.value, newActivity.startAge, lifeLength)
+                                            endAge: filteringNumbers(e.target.value, newActivity.startAge + 1, lifeLength)
                                         })
                                     }}
                                     min={newActivity.startAge} max={lifeLength} />
@@ -215,9 +217,9 @@ export default function TenThousandHoursCalculator() {
 
                             <div>
                                 <label className="block mb-1">顏色</label>
-                                <select className="p-2 border rounded w-1/2 dark:bg-gray-700 dark:border-gray-600" value={newActivity.color} onChange={(e) => setNewActivity({ ...newActivity, color: e.target.value })}>
+                                <select className={`p-2 border rounded w-1/2 dark:bg-gray-700 dark:border-gray-600 ${newActivity.color}`} value={newActivity.color} onChange={(e) => setNewActivity({ ...newActivity, color: e.target.value })}>
                                     {colorOptions.map((color) => (
-                                        <option key={color} value={color}>
+                                        <option key={color} value={color} >
                                             {color.replace("bg-", "").replace("-200", "")}
                                         </option>
                                     ))}
@@ -308,12 +310,12 @@ export default function TenThousandHoursCalculator() {
                                             className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
                                             value={activity.endAge}
                                             onChange={(e) => handleActivityChange(activity.id, "endAge", filteringNumbers(e.target.value, 0, lifeLength))}
-                                            onBlur={(e) => handleActivityChange(activity.id, "endAge", filteringNumbers(e.target.value, activity.startAge, lifeLength))}
+                                            onBlur={(e) => handleActivityChange(activity.id, "endAge", filteringNumbers(e.target.value, activity.startAge + 1, lifeLength))}
                                             min={activity.startAge} max={lifeLength} />
                                     </td>
 
                                     <td className="p-3">
-                                        <select className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
+                                        <select className={`p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600 ${activity.color}`}
                                             value={activity.color}
                                             onChange={(e) => handleActivityChange(activity.id, "color", e.target.value)}>
                                             {colorOptions.map((color) => (
