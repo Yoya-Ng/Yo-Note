@@ -3,14 +3,15 @@ import { useState, useEffect } from "react";
 export default function TenThousandHoursCalculator() {
     // State for life settings
     const [lifeLength, setLifeLength] = useState(80);
+    const everyDay = [1, 2, 3, 4, 5, 6, 7];
     const [activities, setActivities] = useState([
-        { id: 1, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
-        { id: 2, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 0, endAge: 100, showInReport: false, color: "bg-gray-200" },
-        { id: 3, name: "學校", category: "日常生活", hoursPerSession: 8, daysPerWeek: 5, startAge: 6, endAge: 18, showInReport: false, color: "bg-yellow-200" },
+        { id: 1, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 0, endAge: 100, showInReport: false, color: "bg-gray-200" },
+        { id: 2, name: "學校", category: "日常生活", hoursPerSession: 8, daysPerWeek: 5, startAge: 6, endAge: 18, showInReport: false, color: "bg-yellow-200" },
+        { id: 3, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
     ]);
     const [newActivity, setNewActivity] = useState({
         name: "",
-        category: "學習",
+        category: "日常生活",
         hoursPerSession: 1,
         daysPerWeek: 1,
         startAge: 0,
@@ -87,7 +88,16 @@ export default function TenThousandHoursCalculator() {
         setActivities(activities.map((activity) => (activity.id === id ? { ...activity, [field]: value } : activity)));
     };
 
-    const colorOptions = ["bg-blue-200", "bg-green-200", "bg-yellow-200", "bg-red-200", "bg-purple-200", "bg-pink-200", "bg-indigo-200", "bg-gray-200"];
+    const colorOptions = ["bg-blue-200", "bg-green-200", "bg-yellow-200", "bg-red-200", "bg-purple-200", "bg-pink-200", "bg-indigo-200"];
+
+    const filteringNumbers = (value, min, max) => {
+        // 移除非數字的字元，只留下數字
+        const digitsOnly = value.replace(/\D/g, ''); // \D 表示「非數字」
+
+        const parsed = parseInt(digitsOnly, 10);
+        // 限制在 0~24 區間
+        return isNaN(parsed) ? 0 : Math.min(Math.max(parseInt(parsed), min), max);
+    }
 
     return (
         <div className="container mx-auto p-4 glass">
@@ -101,7 +111,11 @@ export default function TenThousandHoursCalculator() {
                         <h2 className="text-xl font-semibold mb-4">生命設定</h2>
                         <div className="flex items-center mb-4">
                             <label className="mr-4 w-32">預期壽命：</label>
-                            <input type="number" className="p-2 border rounded w-24 dark:bg-gray-700 dark:border-gray-600" value={lifeLength} onChange={(e) => setLifeLength(Math.max(1, parseInt(e.target.value) || 0))} min="1" max="120" />
+                            <input type="text"
+                                className="p-2 border rounded w-24 dark:bg-gray-700 dark:border-gray-600"
+                                value={lifeLength}
+                                onChange={(e) => setLifeLength(filteringNumbers(e.target.value, 1, 120))}
+                                min="1" max="120" />
                             <span className="ml-2">歲</span>
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">* 根據計算，你一生中大約有 {Math.round(stats.hoursInLife).toLocaleString()} 小時</div>
@@ -118,7 +132,9 @@ export default function TenThousandHoursCalculator() {
 
                             <div>
                                 <label className="block mb-1">類別</label>
-                                <select className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600" value={newActivity.category} onChange={(e) => setNewActivity({ ...newActivity, category: e.target.value })}>
+                                <select className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600"
+                                    value={newActivity.category}
+                                    onChange={(e) => setNewActivity({ ...newActivity, category: e.target.value })}>
                                     <option value="學習">學習</option>
                                     <option value="日常生活">日常生活</option>
                                     <option value="工作">工作</option>
@@ -128,17 +144,44 @@ export default function TenThousandHoursCalculator() {
 
                             <div>
                                 <label className="block mb-1">每次時數</label>
-                                <input type="number" className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600" value={newActivity.hoursPerSession} onChange={(e) => setNewActivity({ ...newActivity, hoursPerSession: Math.max(0, parseInt(e.target.value) || 0) })} min="0" max="24" />
+                                <input type="text"
+                                    className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600"
+                                    value={newActivity.hoursPerSession}
+                                    onChange={(e) =>
+                                        setNewActivity({
+                                            ...newActivity,
+                                            hoursPerSession: filteringNumbers(e.target.value, 0, 24)
+                                        })
+                                    }
+                                    min="0" max="24" />
                             </div>
 
                             <div>
                                 <label className="block mb-1">開始年齡</label>
-                                <input type="number" className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600" value={newActivity.startAge} onChange={(e) => setNewActivity({ ...newActivity, startAge: Math.max(0, parseInt(e.target.value) || 0) })} min="0" max={newActivity.endAge} />
+                                <input type="text"
+                                    className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600"
+                                    value={newActivity.startAge}
+                                    onChange={(e) =>
+                                        setNewActivity({
+                                            ...newActivity,
+                                            startAge: filteringNumbers(e.target.value, 0, lifeLength - 1)
+                                        })
+                                    }
+                                    min="0" max={newActivity.endAge} />
                             </div>
 
                             <div>
                                 <label className="block mb-1">結束年齡</label>
-                                <input type="number" className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600" value={newActivity.endAge} onChange={(e) => setNewActivity({ ...newActivity, endAge: Math.min(lifeLength, Math.max(newActivity.startAge, parseInt(e.target.value) || 0)) })} min={newActivity.startAge} max={lifeLength} />
+                                <input type="text"
+                                    className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600"
+                                    value={newActivity.endAge}
+                                    onChange={(e) =>
+                                        setNewActivity({
+                                            ...newActivity,
+                                            endAge: filteringNumbers(e.target.value, newActivity.startAge, lifeLength)
+                                        })
+                                    }
+                                    min={newActivity.startAge} max={lifeLength} />
                             </div>
                         </div>
 
@@ -146,7 +189,7 @@ export default function TenThousandHoursCalculator() {
                             <div className="col-span-2">
                                 <label className="block text-lg font-medium mb-2">每週投入天數</label>
                                 <div className="grid grid-cols-7 gap-2">
-                                    {[1, 2, 3, 4, 5, 6, 7].map((days) => (
+                                    {everyDay.map((days) => (
                                         <button key={days}
                                             className={`py-2 rounded-lg ${newActivity.daysPerWeek === days ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700"}`}
                                             onClick={() => setNewActivity({ ...newActivity, daysPerWeek: parseInt(days) })}>
@@ -217,11 +260,17 @@ export default function TenThousandHoursCalculator() {
                                     <td className="p-3 font-medium">{activity.name}</td>
                                     <td className="p-3">{activity.category}</td>
                                     <td className="p-3">
-                                        <input type="number" className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600" value={activity.hoursPerSession} onChange={(e) => handleActivityChange(activity.id, "hoursPerSession", Math.max(0, parseInt(e.target.value) || 0))} min="0" max="24" />
+                                        <input type="text"
+                                            className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
+                                            value={activity.hoursPerSession}
+                                            onChange={(e) => handleActivityChange(activity.id, "hoursPerSession", filteringNumbers(e.target.value, 0, 24))}
+                                            min="0" max="24" />
                                     </td>
                                     <td className="p-3 ">
-                                        <select className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600" value={activity.daysPerWeek} onChange={(e) => handleActivityChange(activity.id, "daysPerWeek", parseInt(e.target.value))}>
-                                            {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                                        <select className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
+                                            value={activity.daysPerWeek}
+                                            onChange={(e) => handleActivityChange(activity.id, "daysPerWeek", parseInt(e.target.value))}>
+                                            {everyDay.map((num) => (
                                                 <option key={num} value={num}>
                                                     {num}
                                                 </option>
@@ -229,10 +278,16 @@ export default function TenThousandHoursCalculator() {
                                         </select>
                                     </td>
                                     <td className="p-3">
-                                        <input type="number" className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600" value={activity.startAge} onChange={(e) => handleActivityChange(activity.id, "startAge", Math.max(0, parseInt(e.target.value) || 0))} min="0" max={activity.endAge} />
+                                        <input type="text"
+                                            className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
+                                            value={activity.startAge} onChange={(e) => handleActivityChange(activity.id, "startAge", filteringNumbers(e.target.value, 0, lifeLength - 1))}
+                                            min="0" max={activity.endAge} />
                                     </td>
                                     <td className="p-3">
-                                        <input type="number" className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600" value={activity.endAge} onChange={(e) => handleActivityChange(activity.id, "endAge", Math.min(lifeLength, Math.max(activity.startAge, parseInt(e.target.value) || 0)))} min={activity.startAge} max={lifeLength} />
+                                        <input type="text"
+                                            className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
+                                            value={activity.endAge} onChange={(e) => handleActivityChange(activity.id, "endAge", filteringNumbers(e.target.value, activity.startAge, lifeLength))}
+                                            min={activity.startAge} max={lifeLength} />
                                     </td>
 
                                     <td className="p-3">
