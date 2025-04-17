@@ -5,7 +5,7 @@ export default function TenThousandHoursCalculator() {
     const [lifeLength, setLifeLength] = useState(80);
     const everyDay = [1, 2, 3, 4, 5, 6, 7];
     const [activities, setActivities] = useState([
-        { id: 1, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 0, endAge: 100, showInReport: false, color: "bg-gray-200" },
+        { id: 1, name: "睡覺", category: "日常生活", hoursPerSession: 8, daysPerWeek: 7, startAge: 0, endAge: 80, showInReport: false, color: "bg-gray-200" },
         { id: 2, name: "學校", category: "日常生活", hoursPerSession: 8, daysPerWeek: 5, startAge: 6, endAge: 18, showInReport: false, color: "bg-yellow-200" },
         { id: 3, name: "練習吉他", category: "學習", hoursPerSession: 1, daysPerWeek: 3, startAge: 15, endAge: 30, showInReport: true, color: "bg-blue-200" },
     ]);
@@ -167,6 +167,14 @@ export default function TenThousandHoursCalculator() {
                                             startAge: filteringNumbers(e.target.value, 0, lifeLength - 1)
                                         })
                                     }
+                                    onBlur={(e) => {
+                                        if (newActivity.startAge >= newActivity.endAge) {
+                                            setNewActivity({
+                                                ...newActivity,
+                                                endAge: e.target.value
+                                            })
+                                        }
+                                    }}
                                     min="0" max={newActivity.endAge} />
                             </div>
 
@@ -178,9 +186,15 @@ export default function TenThousandHoursCalculator() {
                                     onChange={(e) =>
                                         setNewActivity({
                                             ...newActivity,
-                                            endAge: filteringNumbers(e.target.value, newActivity.startAge, lifeLength)
+                                            endAge: filteringNumbers(e.target.value, 0, lifeLength)
                                         })
                                     }
+                                    onBlur={(e) => {
+                                        setNewActivity({
+                                            ...newActivity,
+                                            endAge: filteringNumbers(e.target.value, newActivity.startAge, lifeLength)
+                                        })
+                                    }}
                                     min={newActivity.startAge} max={lifeLength} />
                             </div>
                         </div>
@@ -280,18 +294,28 @@ export default function TenThousandHoursCalculator() {
                                     <td className="p-3">
                                         <input type="text"
                                             className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
-                                            value={activity.startAge} onChange={(e) => handleActivityChange(activity.id, "startAge", filteringNumbers(e.target.value, 0, lifeLength - 1))}
+                                            value={activity.startAge}
+                                            onChange={(e) => handleActivityChange(activity.id, "startAge", filteringNumbers(e.target.value, 0, lifeLength - 1))}
+                                            onBlur={(e) => {
+                                                if (activity.startAge >= activity.endAge) {
+                                                    handleActivityChange(activity.id, "endAge", e.target.value)
+                                                }
+                                            }}
                                             min="0" max={activity.endAge} />
                                     </td>
                                     <td className="p-3">
                                         <input type="text"
                                             className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
-                                            value={activity.endAge} onChange={(e) => handleActivityChange(activity.id, "endAge", filteringNumbers(e.target.value, activity.startAge, lifeLength))}
+                                            value={activity.endAge}
+                                            onChange={(e) => handleActivityChange(activity.id, "endAge", filteringNumbers(e.target.value, 0, lifeLength))}
+                                            onBlur={(e) => handleActivityChange(activity.id, "endAge", filteringNumbers(e.target.value, activity.startAge, lifeLength))}
                                             min={activity.startAge} max={lifeLength} />
                                     </td>
 
                                     <td className="p-3">
-                                        <select className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600" value={activity.color} onChange={(e) => handleActivityChange(activity.id, "color", e.target.value)}>
+                                        <select className="p-1 border rounded w-16 dark:bg-gray-700 dark:border-gray-600"
+                                            value={activity.color}
+                                            onChange={(e) => handleActivityChange(activity.id, "color", e.target.value)}>
                                             {colorOptions.map((color) => (
                                                 <option key={color} value={color} className={color}>
                                                     {color.replace("bg-", "").replace("-200", "")}
@@ -304,7 +328,9 @@ export default function TenThousandHoursCalculator() {
                                     <td className="p-3">
                                         <input type="checkbox" checked={activity.showInReport} onChange={(e) => handleActivityChange(activity.id, "showInReport", e.target.checked)} className="w-4 h-4" />
                                     </td>
-                                    <td className="p-3">{activity.reachedTenThousand ? <span className="text-green-600 dark:text-green-400">✓</span> : <span className="text-red-600 dark:text-red-400">✗</span>}</td>
+                                    <td className="p-3">{activity.reachedTenThousand
+                                        ? <span className="text-green-600 dark:text-green-400">✓ 專家級</span>
+                                        : <span className="text-red-600 dark:text-red-400">✗ 新手小白</span>}</td>
                                     <td className="p-3 ">
                                         <button onClick={() => handleRemoveActivity(activity.id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200">
                                             刪除
