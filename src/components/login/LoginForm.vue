@@ -7,6 +7,12 @@
             <p class="text-sm">{{ errorMessage }}</p>
         </div>
 
+        <!-- 成功訊息提示 -->
+        <div v-if="successMessage"
+             class="success-message mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded">
+            <p class="font-medium">{{ successMessage }}</p>
+        </div>
+        
         <form @submit.prevent="handleLogin">
             <!-- 帳號輸入 -->
             <div class="mb-6">
@@ -113,7 +119,7 @@
                         :disabled="isLoading"
                         class="w-full py-3 px-4 flex justify-center items-center bg-primary bg-lime-500 hover:bg-primary-dark rounded-lg transition duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-70">
                     <template v-if="isLoading">
-                        <svg class="animate-spin -ml-1 mr-2 h-5 w-5 bg-lime-500"
+                        <svg class="animate-spin -ml-1 mr-2 h-5 w-5"
                              xmlns="http://www.w3.org/2000/svg"
                              fill="none"
                              viewBox="0 0 24 24">
@@ -177,59 +183,106 @@
                    class="text-primary font-medium hover:underline">立即註冊</a>
             </div>
         </form>
+        
+        <!-- 測試 API 連線按鈕 (開發用) -->
+        <div class="mt-8 pt-6 border-t border-gray-200">
+            <button @click="testApiConnection"
+                    class="w-full py-2 px-4 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm">
+                測試 Railway API 連線
+            </button>
+            <p v-if="apiTestResult" class="mt-2 text-xs text-center" :class="apiTestResult.success ? 'text-green-600' : 'text-red-600'">
+                {{ apiTestResult.message }}
+            </p>
+        </div>
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-
+    
+// Railway API 基礎 URL - 請替換成你的 Railway URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://your-app.railway.app';
 const username = ref('');
 const password = ref('');
 const rememberMe = ref(false);
 const isLoading = ref(false);
 const errorMessage = ref('');
+const successMessage = ref('');
 const showPassword = ref(false);
+const apiTestResult = ref(null);
 
 const togglePasswordVisibility = () => {
     showPassword.value = !showPassword.value;
 };
 
+// 測試 API 連線
+const testApiConnection = async () => {
+    try {
+        apiTestResult.value = null;
+        const response = await fetch(`${API_BASE_URL}/hello`);
+        const text = await response.text();
+        successMessage.value = '連線成功...';
+        apiTestResult.value = {
+            success: response.ok,
+            message: response.ok ? `✅ 連線成功: ${text}` : `❌ 連線失敗: ${response.status}`
+        };
+    } catch (error) {
+        apiTestResult.value = {
+            success: false,
+            message: `❌ 無法連線到 Railway API: ${error.message}`
+        };
+    }
+};
+
+// 登入處理
 const handleLogin = async () => {
     try {
         errorMessage.value = '';
+        successMessage.value = '';
         isLoading.value = true;
 
-        // API 請求
-        const response = await fetch('/api/auth/login', {
+        // 呼叫 Railway Spring Boot API
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: username.value,
+                name: username.value,
                 password: password.value,
-                remember_me: rememberMe.value
+                rememberMe: rememberMe.value
             }),
         });
 
+        // 檢查回應狀態
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: '登入失敗' }));
+            throw new Error(errorData.message || `HTTP ${response.status}: 登入失敗`);
+        }
+        
         const data = await response.json();
 
         if (!response.ok) {
             throw new Error(data.message || '登入失敗，請檢查帳號密碼');
         }
 
-        // 保存 token
-        localStorage.setItem('auth_token', data.token);
-
-        // 如果需要，也可以保存其他用戶信息
+        // 保存認證資訊
+        if (data.token) {
+            localStorage.setItem('auth_token', data.token);
+        }
+        
         if (data.user) {
             localStorage.setItem('user_info', JSON.stringify(data.user));
         }
 
-        // 登入成功，返回首頁或指定頁面
+        // 顯示成功訊息
+        successMessage.value = '登入成功!正在跳轉...';
+
+        // 延遲跳轉,讓使用者看到成功訊息
+        setTimeout(() => {
         const returnUrl = new URLSearchParams(window.location.search).get('returnUrl');
         window.location.href = returnUrl || '/';
-
+        }, 1000);
     } catch (error) {
         console.error('登入錯誤:', error);
         errorMessage.value = error.message || '登入失敗，請檢查帳號密碼';
@@ -238,3 +291,7 @@ const handleLogin = async () => {
     }
 };
 </script>
+
+<style scoped>
+/* 可以根據需要添加自定義樣式 */
+</style>
