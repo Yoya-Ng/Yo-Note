@@ -201,7 +201,7 @@
 import { ref } from 'vue';
     
 // Railway API 基礎 URL - 請替換成你的 Railway URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://your-app.railway.app';
+const API_BASE_URL = import.env.VITE_API_URL || 'https://image-production-9a58.up.railway.app';
 const username = ref('');
 const password = ref('');
 const rememberMe = ref(false);
