@@ -17,7 +17,7 @@
             <!-- 帳號輸入 -->
             <div class="mb-6">
                 <label for="username"
-                       class="block text-sm font-semibold mb-2">帳號 TEST2</label>
+                       class="block text-sm font-semibold mb-2">帳號 TEST3</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -201,7 +201,7 @@
 import { ref } from 'vue';
     
 // Railway API 基礎 URL - 請替換成你的 Railway URL
-const API_BASE_URL = import.env.VITE_API_URL || 'https://image-production-9a58.up.railway.app';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://image-production-9a58.up.railway.app';
 const username = ref('');
 const password = ref('');
 const rememberMe = ref(false);
