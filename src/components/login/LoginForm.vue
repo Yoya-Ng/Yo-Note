@@ -17,7 +17,7 @@
             <!-- 帳號輸入 -->
             <div class="mb-6">
                 <label for="username"
-                       class="block text-sm font-semibold mb-2">帳號 TEST</label>
+                       class="block text-sm font-semibold mb-2">帳號 TEST2</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg"
