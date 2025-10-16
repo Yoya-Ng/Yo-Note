@@ -219,13 +219,25 @@ const togglePasswordVisibility = () => {
 const testApiConnection = async () => {
     try {
         apiTestResult.value = null;
-        const response = await fetch(`${API_BASE_URL}/hello`);
+        const response = await fetch(`${API_BASE_URL}/hello`, {
+            method: 'GET' // 明確指定為 GET
+        });
+        
+        // ... 後續處理邏輯相同 ...
+        
         const text = await response.text();
-        successMessage.value = '連線成功...';
-        apiTestResult.value = {
-            success: response.ok,
-            message: response.ok ? `✅ 連線成功: ${text}` : `❌ 連線失敗: ${response.status}`
-        };
+        if (response.ok) {
+            successMessage.value = '連線成功...';
+            apiTestResult.value = {
+                success: true,
+                message: `✅ 連線成功，API 回傳: ${text}` 
+            };
+        } else {
+            apiTestResult.value = {
+                success: false,
+                message: `❌ 連線失敗: HTTP 錯誤 ${response.status} (${response.statusText})`
+            };
+        }
     } catch (error) {
         apiTestResult.value = {
             success: false,
