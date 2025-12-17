@@ -254,7 +254,7 @@ const handleLogin = async () => {
         isLoading.value = true;
 
         // 呼叫 Railway Spring Boot API
-        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
