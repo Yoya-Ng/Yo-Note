@@ -260,7 +260,7 @@ const handleLogin = async () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: username.value,
+                username: username.value,
                 password: password.value,
                 rememberMe: rememberMe.value
             }),
