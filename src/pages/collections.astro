@@ -3,46 +3,101 @@
 // 6. src/pages/collections.astro
 // 我的收藏頁面 (需要 premium 或 admin)
 // ============================================
-
 ---
+// src/pages/collections.astro
 import BaseLayout from "@components/base/BaseLayout.astro";
-import ProtectedRoute from "@components/ProtectedRoute.vue";
 ---
 
 <BaseLayout title="我的收藏" description="保存和管理您喜歡的內容">
-  <ProtectedRoute requiredRole={['premium', 'admin']} client:load>
-    <section class="section container">
-      <h1 class="text-3xl font-bold mb-8">⭐ 我的收藏</h1>
-      
-      <div class="glass rounded-lg p-8">
-        <div class="text-center mb-8">
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
-            您還沒有添加任何收藏
-          </p>
-          <button class="btn btn-primary">開始收藏內容</button>
-        </div>
-      </div>
-
-      <!-- 收藏列表示例 -->
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="glass rounded-lg p-6">
-          <h3 class="font-bold mb-2">示例收藏 1</h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">
-            這是您收藏的內容
-          </p>
-          <button class="mt-4 text-blue-500 hover:text-blue-600">查看詳情</button>
-        </div>
-      </div>
-    </section>
-  </ProtectedRoute>
+  <section class="section container">
+    <div class="glass rounded-lg p-8 text-center">
+      <h2 class="text-2xl font-bold mb-4">🔒 此功能需要高級會員</h2>
+      <p class="mb-6">請先登入並升級為高級會員以使用收藏功能</p>
+      <a href="/login" class="btn btn-primary">前往登入</a>
+    </div>
+  </section>
 </BaseLayout>
 
-<style scoped>
+<style>
 .btn {
-  @apply px-4 py-2 rounded-lg font-semibold;
+  @apply px-4 py-2 rounded-lg font-semibold transition-colors;
 }
 
 .btn-primary {
   @apply bg-blue-500 text-white hover:bg-blue-600;
 }
+
+.btn-upgrade {
+  @apply bg-yellow-500 text-white hover:bg-yellow-600;
+}
 </style>
+
+<script>
+  // 客戶端檢查登入狀態和權限
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('auth_token');
+    const userInfo = localStorage.getItem('user_info');
+    
+    if (token && userInfo) {
+      try {
+        const user = JSON.parse(userInfo);
+        const container = document.querySelector('.section.container');
+        
+        if (user.role === 'premium' || user.role === 'admin') {
+          // 高級會員，顯示收藏功能
+          if (container) {
+            container.innerHTML = `
+              <h1 class="text-3xl font-bold mb-8">⭐ 我的收藏</h1>
+              
+              <div class="glass rounded-lg p-8">
+                <div class="text-center mb-8">
+                  <p class="text-gray-600 dark:text-gray-400 mb-4">
+                    您還沒有添加任何收藏
+                  </p>
+                  <button class="btn btn-primary">開始收藏內容</button>
+                </div>
+              </div>
+
+              <!-- 收藏列表示例 -->
+              <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass rounded-lg p-6">
+                  <h3 class="font-bold mb-2">示例收藏 1</h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">
+                    這是您收藏的內容
+                  </p>
+                  <button class="mt-4 text-blue-500 hover:text-blue-600">查看詳情</button>
+                </div>
+              </div>
+            `;
+          }
+        } else {
+          // 普通用戶，顯示升級提示
+          if (container) {
+            container.innerHTML = `
+              <div class="glass rounded-lg p-8 text-center">
+                <h2 class="text-2xl font-bold mb-4">🔒 高級功能</h2>
+                <p class="mb-6">我的收藏功能需要高級會員權限</p>
+                
+                <div class="features bg-bg-t p-4 rounded my-6 text-left max-w-md mx-auto">
+                  <h3 class="font-bold mb-3">高級會員可享受：</h3>
+                  <ul class="list-none space-y-2">
+                    <li>✓ 保存無限個人最愛文章</li>
+                    <li>✓ 建立多個收藏清單</li>
+                    <li>✓ 分享收藏給朋友</li>
+                    <li>✓ 離線查看保存內容</li>
+                  </ul>
+                </div>
+                
+                <button onclick="alert('升級功能將在未來推出')" class="btn btn-upgrade">
+                  升級到高級會員
+                </button>
+              </div>
+            `;
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing user info:', error);
+      }
+    }
+  }
+</script>
