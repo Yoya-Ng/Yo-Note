@@ -3,12 +3,197 @@
 // 5. src/pages/profile.astro
 // 使用者個人資料頁面
 // ============================================
-
 ---
+// src/pages/profile.astro
 import BaseLayout from "@components/base/BaseLayout.astro";
-import UserProfile from "@components/user/UserProfile.vue";
 ---
 
 <BaseLayout title="個人資料" description="查看和管理您的個人資料">
-  <UserProfile client:load />
+  <section class="section container">
+    <div class="glass rounded-lg p-8 text-center">
+      <h2 class="text-2xl font-bold mb-4">🔒 請先登入</h2>
+      <p class="mb-6">需要登入才能查看個人資料</p>
+      <a href="/login" class="btn btn-primary">前往登入</a>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+.btn {
+  @apply px-4 py-2 rounded-lg font-semibold transition-colors;
+}
+
+.btn-primary {
+  @apply bg-blue-500 text-white hover:bg-blue-600;
+}
+
+.btn-secondary {
+  @apply bg-gray-500 text-white hover:bg-gray-600;
+}
+
+.btn-danger {
+  @apply bg-red-500 text-white hover:bg-red-600;
+}
+</style>
+
+<script>
+  // 客戶端檢查登入狀態
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('auth_token');
+    const userInfo = localStorage.getItem('user_info');
+    
+    if (token && userInfo) {
+      try {
+        const user = JSON.parse(userInfo);
+        const container = document.querySelector('.section.container');
+        
+        // 格式化日期
+        const formatDate = (dateStr: string) => {
+          return new Date(dateStr).toLocaleDateString('zh-TW');
+        };
+        
+        // 角色顯示
+        const roleMap: Record<string, string> = {
+          guest: '訪客',
+          user: '普通用戶',
+          premium: '高級會員',
+          admin: '管理員'
+        };
+        
+        // 角色徽章顏色
+        const badgeClass = (role: string) => {
+          const classes: Record<string, string> = {
+            premium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+            admin: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+            user: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+            guest: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
+          };
+          return classes[role] || classes.guest;
+        };
+        
+        if (container) {
+          container.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- 左側：個人頭像和基本資訊 -->
+              <div class="md:col-span-1">
+                <div class="glass rounded-lg p-6 text-center sticky top-20">
+                  <div class="mb-4">
+                    <img 
+                      src="${user.avatar || '/default-avatar.png'}" 
+                      alt="${user.name}"
+                      class="w-24 h-24 rounded-full mx-auto border-4 border-primary"
+                    />
+                  </div>
+                  <h1 class="text-2xl font-bold mb-1">${user.name}</h1>
+                  <p class="text-gray-600 dark:text-gray-400 mb-4">@${user.username}</p>
+                  <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${badgeClass(user.role)}">
+                    ${roleMap[user.role]}
+                  </span>
+                  <button 
+                    onclick="handleLogout()"
+                    class="w-full mt-6 btn btn-danger">
+                    登出
+                  </button>
+                </div>
+              </div>
+
+              <!-- 右側：詳細資訊 -->
+              <div class="md:col-span-2 space-y-6">
+                <!-- 基本資訊卡片 -->
+                <div class="glass rounded-lg p-6">
+                  <h2 class="text-xl font-bold mb-4">📋 基本資訊</h2>
+                  <div class="space-y-4">
+                    <div class="flex justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+                      <span class="text-gray-600 dark:text-gray-400">電子郵件</span>
+                      <span class="font-semibold">${user.email}</span>
+                    </div>
+                    ${user.phone ? `
+                    <div class="flex justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+                      <span class="text-gray-600 dark:text-gray-400">電話</span>
+                      <span class="font-semibold">${user.phone}</span>
+                    </div>
+                    ` : ''}
+                    <div class="flex justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+                      <span class="text-gray-600 dark:text-gray-400">加入日期</span>
+                      <span class="font-semibold">${formatDate(user.joinDate)}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                      <span class="text-gray-600 dark:text-gray-400">最後登入</span>
+                      <span class="font-semibold">${formatDate(user.lastLogin)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 帳戶權限 -->
+                <div class="glass rounded-lg p-6">
+                  <h2 class="text-xl font-bold mb-4">🔐 帳戶權限</h2>
+                  <div class="space-y-3">
+                    <div class="flex items-center gap-3 p-3 rounded-lg bg-green-100 dark:bg-green-900/30">
+                      <span class="text-lg">✅</span>
+                      <div class="flex-1">
+                        <p class="font-semibold">個人資料管理</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">查看和編輯您的個人資料</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 rounded-lg ${user.role === 'premium' || user.role === 'admin' ? 'bg-green-100 dark:bg-green-900/40' : 'bg-gray-100 dark:bg-gray-800'}">
+                      <span class="text-lg">${user.role === 'premium' || user.role === 'admin' ? '✅' : '🔒'}</span>
+                      <div class="flex-1">
+                        <p class="font-semibold">我的收藏</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                          ${user.role === 'premium' || user.role === 'admin' ? '已解鎖' : '需要高級會員'}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 rounded-lg ${user.role === 'premium' || user.role === 'admin' ? 'bg-green-100 dark:bg-green-900/40' : 'bg-gray-100 dark:bg-gray-800'}">
+                      <span class="text-lg">${user.role === 'premium' || user.role === 'admin' ? '✅' : '🔒'}</span>
+                      <div class="flex-1">
+                        <p class="font-semibold">進度追蹤</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                          ${user.role === 'premium' || user.role === 'admin' ? '已解鎖' : '需要高級會員'}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 rounded-lg ${user.role === 'admin' ? 'bg-green-100 dark:bg-green-900/40' : 'bg-gray-100 dark:bg-gray-800'}">
+                      <span class="text-lg">${user.role === 'admin' ? '✅' : '🔒'}</span>
+                      <div class="flex-1">
+                        <p class="font-semibold">管理後台</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                          ${user.role === 'admin' ? '已解鎖' : '僅限管理員'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 個人簡介 -->
+                ${user.bio ? `
+                <div class="glass rounded-lg p-6">
+                  <h2 class="text-xl font-bold mb-4">💬 個人簡介</h2>
+                  <p class="text-gray-700 dark:text-gray-300">
+                    ${user.bio}
+                  </p>
+                </div>
+                ` : ''}
+
+                <!-- 操作按鈕 -->
+                <div class="flex gap-4">
+                  <button class="flex-1 btn btn-primary" onclick="alert('編輯功能開發中')">編輯資料</button>
+                  <button class="flex-1 btn btn-secondary" onclick="alert('修改密碼功能開發中')">修改密碼</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error parsing user info:', error);
+      }
+    }
+  }
+  
+  // 登出函數
+  function handleLogout() {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_info');
+    window.location.href = '/';
+  }
+</script>
