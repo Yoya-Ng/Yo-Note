@@ -1,0 +1,13 @@
+// src/pages/profile.astro
+---
+import BaseLayout from "@components/base/BaseLayout.astro";
+import ProfilePage from "@components/user/ProfilePage.astro";
+
+// 從 localStorage 獲取用戶信息
+const authData = Astro.locals.user; // 或從 API 獲取
+const user = authData ? JSON.parse(localStorage.getItem('user_info') || '{}') : null;
+---
+
+<BaseLayout title="個人資料" description="查看和管理您的個人資料">
+  <ProfilePage isLoggedIn={!!user} user={user} />
+</BaseLayout>
