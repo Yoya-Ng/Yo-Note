@@ -1,0 +1,189 @@
+---
+
+// src/components/user/ProgressTracker.astro
+---
+interface Course {
+  id: number;
+  name: string;
+  progress: number;
+  completed: number;
+  total: number;
+}
+
+interface Activity {
+  id: number;
+  icon: string;
+  title: string;
+  date: string;
+}
+
+interface Props {
+  isLoggedIn?: boolean;
+  hasPremium?: boolean;
+}
+
+const { 
+  isLoggedIn = false, 
+  hasPremium = false,
+} = Astro.props;
+
+const courses: Course[] = [
+  { id: 1, name: 'Java 基礎', progress: 85, completed: 17, total: 20 },
+  { id: 2, name: 'Spring Boot 進階', progress: 60, completed: 9, total: 15 },
+  { id: 3, name: 'React 實戰', progress: 40, completed: 6, total: 15 },
+];
+
+const recentActivities: Activity[] = [
+  { id: 1, icon: '✅', title: '完成課程: Spring Boot 基礎', date: '今天 14:30' },
+  { id: 2, icon: '🎯', title: '達成 7 天連續簽到', date: '昨天 09:00' },
+  { id: 3, icon: '📝', title: '完成測驗: Java 進階語法', date: '3 天前' },
+  { id: 4, icon: '🏆', title: '獲得成就: 快速學習者', date: '一週前' },
+];
+---
+
+<div class="tracker-container section container">
+  {!isLoggedIn && (
+    <div class="access-denied glass rounded-lg p-8 text-center">
+      <h2 class="text-2xl font-bold mb-4">📊 進度追蹤</h2>
+      <p class="mb-6">此功能僅限已登入用戶使用</p>
+      <a href="/login" class="btn btn-primary">前往登入</a>
+    </div>
+  )}
+
+  {isLoggedIn && !hasPremium && (
+    <div class="premium-required glass rounded-lg p-8 text-center">
+      <h2 class="text-2xl font-bold mb-4">🔒 高級功能</h2>
+      <p class="mb-6">進度追蹤功能需要高級會員權限</p>
+      
+      <div class="features bg-bg-t p-4 rounded my-6 text-left">
+        <h3 class="font-bold mb-3">高級會員可享受：</h3>
+        <ul class="list-none space-y-2">
+          <li>✓ 詳細的學習進度分析</li>
+          <li>✓ 完成度統計圖表</li>
+          <li>✓ 個人化建議</li>
+          <li>✓ 導出進度報告</li>
+        </ul>
+      </div>
+      
+      <button onclick="upgradeToPremium()" class="btn btn-upgrade">升級到高級會員</button>
+    </div>
+  )}
+
+  {isLoggedIn && hasPremium && (
+    <div class="tracker-content">
+      <h2 class="text-2xl font-bold mb-6">📊 進度追蹤</h2>
+      
+      <div class="stats-grid grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="stat-box glass rounded-lg p-4">
+          <h3 class="font-semibold mb-3">總完成度</h3>
+          <div class="progress-bar w-full h-2 bg-gray-300 rounded-full overflow-hidden mb-2">
+            <div class="progress h-full bg-gradient-to-r from-blue-500 to-purple-500" style="width: 65%"></div>
+          </div>
+          <p class="text-lg font-bold">65%</p>
+        </div>
+
+        <div class="stat-box glass rounded-lg p-4">
+          <h3 class="font-semibold mb-2">本月學習時數</h3>
+          <p class="text-3xl font-bold">28h</p>
+          <p class="text-sm text-gray-500">目標: 40h</p>
+        </div>
+
+        <div class="stat-box glass rounded-lg p-4">
+          <h3 class="font-semibold mb-2">連續簽到天數</h3>
+          <p class="text-3xl font-bold">12</p>
+          <p class="text-sm text-gray-500">🔥 保持加油!</p>
+        </div>
+      </div>
+
+      {/* 課程進度 */}
+      <section class="courses-section glass rounded-lg p-6 mb-6">
+        <h3 class="text-xl font-bold mb-4">課程進度</h3>
+        <div class="space-y-4">
+          {courses.map((course) => (
+            <div class="course-item">
+              <div class="flex justify-between mb-2">
+                <span class="font-semibold">{course.name}</span>
+                <span class="text-sm">{course.progress}%</span>
+              </div>
+              <div class="progress-bar w-full h-2 bg-gray-300 rounded-full overflow-hidden mb-1">
+                <div 
+                  class="progress h-full bg-gradient-to-r from-blue-500 to-purple-500" 
+                  style={`width: ${course.progress}%`}
+                ></div>
+              </div>
+              <p class="text-xs text-gray-500">{course.completed} / {course.total} 完成</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 最近活動 */}
+      <section class="activity-section glass rounded-lg p-6">
+        <h3 class="text-xl font-bold mb-4">最近活動</h3>
+        <div class="space-y-3">
+          {recentActivities.map((activity) => (
+            <div class="activity-item flex items-start gap-3 p-3 rounded bg-gray-50 dark:bg-gray-800">
+              <span class="icon text-xl">{activity.icon}</span>
+              <div>
+                <p class="font-semibold">{activity.title}</p>
+                <p class="text-sm text-gray-500">{activity.date}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  )}
+</div>
+
+<script>
+const upgradeToPremium = () => {
+  alert('升級功能尚未實現，請聯絡管理員');
+};
+</script>
+
+<style>
+.tracker-container {
+  @apply section container;
+}
+
+.access-denied, .premium-required {
+  @apply glass rounded-lg p-8 text-center;
+}
+
+.stats-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+.stat-box {
+  @apply shadow;
+}
+
+.progress-bar {
+  @apply w-full h-2 bg-gray-300 rounded-full overflow-hidden;
+}
+
+.progress {
+  @apply h-full transition-all;
+}
+
+.course-item {
+  @apply p-3 border rounded-lg border-gray-200 dark:border-gray-700;
+}
+
+.activity-item {
+  @apply flex items-start gap-3 p-3 rounded bg-gray-50 dark:bg-gray-800;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-lg font-semibold transition-colors;
+}
+
+.btn-primary {
+  @apply bg-blue-500 text-white hover:bg-blue-600;
+}
+
+.btn-upgrade {
+  @apply bg-yellow-500 text-white hover:bg-yellow-600;
+}
+</style>
