@@ -1,0 +1,46 @@
+
+// ============================================
+// 7. src/pages/analytics.astro
+// 數據分析頁面 (需要 premium 或 admin)
+// ============================================
+
+---
+import BaseLayout from "@components/base/BaseLayout.astro";
+import ProtectedRoute from "@components/ProtectedRoute.vue";
+---
+
+<BaseLayout title="數據分析" description="查看您的活動統計和分析">
+  <ProtectedRoute requiredRole={['premium', 'admin']} client:load>
+    <section class="section container">
+      <h1 class="text-3xl font-bold mb-8">📊 數據分析</h1>
+      
+      <!-- 統計卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="glass rounded-lg p-6 text-center">
+          <div class="text-4xl font-bold text-blue-500">1,234</div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">訪問次數</p>
+        </div>
+        <div class="glass rounded-lg p-6 text-center">
+          <div class="text-4xl font-bold text-green-500">45</div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">活躍天數</p>
+        </div>
+        <div class="glass rounded-lg p-6 text-center">
+          <div class="text-4xl font-bold text-purple-500">89</div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">內容互動</p>
+        </div>
+        <div class="glass rounded-lg p-6 text-center">
+          <div class="text-4xl font-bold text-orange-500">23</div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">收藏項目</p>
+        </div>
+      </div>
+
+      <!-- 詳細分析 -->
+      <div class="glass rounded-lg p-8">
+        <h2 class="text-2xl font-bold mb-6">月度分析</h2>
+        <div class="h-64 bg-bg-s dark:bg-darkmode-bg-s rounded-lg flex items-center justify-center">
+          <p class="text-gray-600 dark:text-gray-400">圖表數據加載中...</p>
+        </div>
+      </div>
+    </section>
+  </ProtectedRoute>
+</BaseLayout>
