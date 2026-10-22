@@ -1,15 +1,45 @@
 ---
-import type { SearchableEntry } from "@/types";
 import BaseLayout from "@components/base/BaseLayout.astro";
-import Search from "@components/search/Search";
-
-interface Props {
-  searchList: SearchableEntry[];
-}
-
-const { searchList } = Astro.props;
 ---
 
 <BaseLayout title="Search" description="Search for content on this site">
-  <Search client:load searchList={searchList} />
+  <section class="section container" data-pagefind-ignore="all">
+    <!-- Pagefind 的索引在 build 後才產生（postbuild），npm run dev 時搜尋不會有結果 -->
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+    <div id="search"></div>
+    <noscript>搜尋功能需要啟用 JavaScript。</noscript>
+    <script is:inline>
+      (function () {
+        const el = document.getElementById("search");
+        if (!el || el.dataset.ready) return;
+        const init = () => {
+          el.dataset.ready = "1";
+          new PagefindUI({ element: "#search", showSubResults: true, showImages: false });
+        };
+        if (window.PagefindUI) {
+          init();
+        } else {
+          const s = document.createElement("script");
+          s.src = "/pagefind/pagefind-ui.js";
+          s.onload = init;
+          document.head.appendChild(s);
+        }
+      })();
+    </script>
+  </section>
 </BaseLayout>
+
+<style is:global>
+  #search {
+    --pagefind-ui-scale: 0.9;
+    --pagefind-ui-primary: #65a30d;
+    --pagefind-ui-border-radius: 12px;
+    --pagefind-ui-font: inherit;
+  }
+  .dark #search {
+    --pagefind-ui-text: #ddd;
+    --pagefind-ui-background: #222;
+    --pagefind-ui-border: #444;
+    --pagefind-ui-tag: #444;
+  }
+</style>

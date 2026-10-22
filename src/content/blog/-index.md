@@ -1,4 +1,4 @@
 ---
 title: Blog
-description: The blog of Jane and John Doe
+description: Yo H. 的技術部落格
 ---

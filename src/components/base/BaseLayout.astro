@@ -22,7 +22,7 @@ const { title, description, image, noindex, canonical } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
   <head>
     <!-- favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
@@ -158,7 +158,7 @@ const { title, description, image, noindex, canonical } = Astro.props;
   <body>
     <Background />
     <Header/>
-    <main id="main-content" class="flex-1" >
+    <main id="main-content" class="flex-1" data-pagefind-body>
       <slot />
     </main>
     <Footer />
