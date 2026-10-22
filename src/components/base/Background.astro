@@ -1,31 +1,35 @@
 ---
 // Twinkling Star Background
-const numStars = 1600;
-const stars = Array.from({ length: numStars }).map(() => ({
-  left: `${Math.random() * 100}%`,
-  top: `${Math.random() * 100}%`,
-  size: `${Math.random() * 2 + 1}px`,
-  delay: `${7 * Math.random()}s`,
-  // hsl: `hsl(${Math.random() * 360}, 100%, 50%)`, // background: ${hsl};
-}));
+// 星星改在瀏覽器端產生：原本在 build 時把 1600 個 div 寫進每頁 HTML（約 490KB／頁）。
+// transition:persist 讓換頁時保留同一片星空，只產生一次。
 ---
 
-<div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-  {
-    stars.map(({ left, top, size, delay }) => (
-      <div
-        class="absolute bg-none dark:bg-yellow-50 rounded-full animate-twinkle"
-        style={`
-            left: ${left};
-            top: ${top};
-            width: ${size};
-            height: ${size};
-            animation-delay: ${delay};
-        `}
-      />
-    ))
-  }
+<div
+  id="starfield"
+  transition:persist="starfield"
+  class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden"
+>
 </div>
+<script is:inline>
+  (function () {
+    const field = document.getElementById("starfield");
+    if (!field || field.childElementCount > 0) return;
+    const numStars = 1600;
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < numStars; i++) {
+      const star = document.createElement("div");
+      const size = `${Math.random() * 2 + 1}px`;
+      star.className = "absolute bg-none dark:bg-yellow-50 rounded-full animate-twinkle";
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.width = size;
+      star.style.height = size;
+      star.style.animationDelay = `${7 * Math.random()}s`;
+      frag.appendChild(star);
+    }
+    field.appendChild(frag);
+  })();
+</script>
 <!-- Gradient Cycle Background --><!-- <div
   class="gradient animate-cycleBg fixed top-0 left-0 w-full h-full -z-1 pointer-events-none overflow-hidden"
 />
