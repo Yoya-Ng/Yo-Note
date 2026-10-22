@@ -1,0 +1,30 @@
+---
+import BaseLayout from "@components/base/BaseLayout.astro";
+import Breadcrumbs from "@components/common/Breadcrumbs.astro";
+import CsvFlow from "@components/csv-flow/CsvFlow";
+
+const title = "大量 CSV 檢閱流程";
+const description =
+  "比較用 DuckDB 直接查 CSV、轉成 Parquet、載入 Greenplum 三種方式檢閱大量 CSV 的處理流程。";
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- 與 PageHeader 相同樣式，但不經 upperHumanize，避免 CSV 變成 Csv -->
+  <section class="flex justify-center">
+    <div class="container text-center m-2">
+      <div class="rounded-lg p-0 bg-gradient-to-t gradient">
+        <div class="rounded-lg glass px-8 py-6 intersect:animate-fadeDown opacity-0 intersect-no-queue">
+          <h1 set:text={title} />
+          <Breadcrumbs className="mt-4" />
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section container">
+    <p class="mb-8 max-w-3xl leading-relaxed">
+      上億筆的 CSV 不適合直接用 Excel 或 pandas 整份讀進記憶體。這頁用動畫逐步呈現三種常見做法，
+      點選上方路線切換，點流程節點或用播放鍵查看每一步的指令與注意事項。
+    </p>
+    <CsvFlow client:load />
+  </section>
+</BaseLayout>
