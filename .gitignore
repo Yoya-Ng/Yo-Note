@@ -1,1 +1,6 @@
 node_modules
+
+# 環境變數（不進版控）
+.env
+.env.*
+!.env.example
