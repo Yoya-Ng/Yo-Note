@@ -76,19 +76,6 @@ const note = defineCollection({
     }),
 });
 
-const docs = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.{md,mdx}", base: "./src/content/docs" }),
-  schema: ({ image }) =>
-    searchable.extend({
-      pubDate: z.date().optional(),
-      modDate: z.date().optional(),
-      // image: image().optional(),
-      // imageAlt: z.string().default("image"),
-      hideToc: z.boolean().default(false),
-      hideNav: z.boolean().default(false),
-    }),
-});
-
 const home = defineCollection({
   loader: glob({ pattern: "-index.{md,mdx}", base: "./src/content/home" }),
   schema: ({ image }) =>
@@ -118,42 +105,6 @@ const indexCards = defineCollection({
   }),
 });
 
-const poetry = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.{md,mdx}", base: "./src/content/poetry" }),
-  schema: ({ image }) =>
-    searchable.extend({
-      date: z.date().optional(),
-      image: image().optional(),
-      imageAlt: z.string().default("image"),
-      author: reference("authors").optional(),
-    }),
-});
-
-const recipes = defineCollection({
-  loader: glob({
-    pattern: "**\/[^_]*.{md,mdx}",
-    base: "./src/content/recipes",
-  }),
-  schema: ({ image }) =>
-    searchable.extend({
-      date: z.date().optional(),
-      image: image().optional(),
-      imageAlt: z.string().default("image"),
-      author: reference("authors").optional(),
-      prepTime: z.number().optional(),
-      servings: z.number().optional(),
-      diet: z.string().optional(),
-      ingredients: z
-        .object({
-          list: z.array(z.string()),
-          qty: z.array(z.string()),
-        })
-        .optional(),
-      instructions: z.array(z.string()).optional(),
-      notes: z.array(z.string()).optional(),
-    }),
-});
-
 const terms = defineCollection({
   loader: glob({ pattern: "-index.{md,mdx}", base: "./src/content/terms" }),
   schema: searchable,
@@ -166,10 +117,7 @@ export const collections = {
   authors,
   blog,
   note,
-  docs,
   home,
   indexCards,
-  poetry,
-  recipes,
   terms,
 };
