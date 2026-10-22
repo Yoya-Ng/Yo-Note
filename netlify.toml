@@ -1,0 +1,8 @@
+# Netlify 建置設定（此檔設定優先於 Netlify 後台的 Build settings）
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # 固定 Node 主版本，與本機開發（v22）一致；Astro 6 以上需要 Node 22.12+
+  NODE_VERSION = "22"
