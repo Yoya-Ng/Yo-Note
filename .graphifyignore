@@ -1,0 +1,5 @@
+# 自動產生的快取與暫存，不納入知識圖譜
+.astro/
+.claude/
+.playwright-mcp/
+public/

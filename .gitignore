@@ -4,3 +4,10 @@ node_modules
 .env
 .env.*
 !.env.example
+
+# graphify 產出的知識圖譜（本機重建即可）
+graphify-out/
+
+# Claude Code 的 worktree 與 build 輸出
+.claude/worktrees/
+dist/
