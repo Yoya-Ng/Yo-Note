@@ -106,11 +106,6 @@
                     <label for="remember-me"
                            class="ml-2 block text-sm">記住我</label>
                 </div>
-
-                <div class="text-sm">
-                    <a href="/loginForgot"
-                       class="text-primary hover:underline">忘記密碼?</a>
-                </div>
             </div>
 
             <!-- 登入按鈕 -->
@@ -175,13 +170,6 @@
                 </button>
             </div>
         -->
-
-            <!-- 註冊連結 -->
-            <div class="text-center text-sm">
-                還沒有帳號?
-                <a href="/loginNew"
-                   class="text-primary font-medium hover:underline">立即註冊</a>
-            </div>
         </form>
         
         <!-- 測試 API 連線按鈕 (開發用) -->
