@@ -36,4 +36,17 @@ export default defineConfig({
     },
     extendDefaultPlugins: true
   },
+  // 本機開發：/api/* 轉到本機 Spring Boot（與正式環境 netlify.toml 的代理對應），
+  // 讓登入 cookie 以同網域運作。後端 port 不同時設定 API_PROXY_TARGET
+  vite: {
+    server: {
+      proxy: {
+        "/api": {
+          target: process.env.API_PROXY_TARGET || "http://localhost:8080",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+      },
+    },
+  },
 });

@@ -6,3 +6,11 @@
 [build.environment]
   # 固定 Node 主版本，與本機開發（v22）一致；Astro 6 以上需要 Node 22.12+
   NODE_VERSION = "22"
+
+# /api/* 代理到 Railway 上的 Spring Boot（同網域呼叫，登入 cookie 才不會被當成第三方 cookie）
+# 後端部署到 Railway 後，把 <railway-host> 換成實際網址並取消註解（netlify.toml 的轉址不支援環境變數）
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://<railway-host>/:splat"
+#   status = 200
+#   force = true

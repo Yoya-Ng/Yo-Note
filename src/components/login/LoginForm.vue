@@ -13,11 +13,21 @@
             <p class="font-medium">{{ successMessage }}</p>
         </div>
         
-        <form @submit.prevent="handleLogin">
+        <!-- 已登入 -->
+        <div v-if="currentUser" class="text-center">
+            <p class="mb-6">已登入：<span class="font-semibold">{{ currentUser }}</span></p>
+            <button type="button"
+                    @click="handleLogout"
+                    class="w-full py-3 px-4 bg-gray-200 hover:bg-gray-300 dark:bg-darkmode-bg-s rounded-lg transition duration-200">
+                登出
+            </button>
+        </div>
+
+        <form v-else @submit.prevent="handleLogin">
             <!-- 帳號輸入 -->
             <div class="mb-6">
                 <label for="username"
-                       class="block text-sm font-semibold mb-2">帳號 TEST3</label>
+                       class="block text-sm font-semibold mb-2">帳號</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -96,18 +106,6 @@
                 </div>
             </div>
 
-            <!-- 記住我 & 忘記密碼 -->
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center">
-                    <input id="remember-me"
-                           type="checkbox"
-                           v-model="rememberMe"
-                           class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
-                    <label for="remember-me"
-                           class="ml-2 block text-sm">記住我</label>
-                </div>
-            </div>
-
             <!-- 登入按鈕 -->
             <div class="mb-6">
                 <button type="submit"
@@ -176,7 +174,7 @@
         <div class="mt-8 pt-6 border-t border-gray-200">
             <button @click="testApiConnection"
                     class="w-full py-2 px-4 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm">
-                測試 Railway API 連線
+                測試後端 API 連線
             </button>
             <p v-if="apiTestResult" class="mt-2 text-xs text-center" :class="apiTestResult.success ? 'text-green-600' : 'text-red-600'">
                 {{ apiTestResult.message }}
@@ -186,13 +184,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-    
-// Railway API 基礎 URL - 請替換成你的 Railway URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://image-production-9a58.up.railway.app';
+import { ref, onMounted } from 'vue';
+
+// 後端經同網域的 /api 代理呼叫：正式環境由 netlify.toml 轉到 Railway，本機由 astro.config.mjs 的 vite proxy 轉到 localhost
+// 登入狀態存在後端設定的 HttpOnly session cookie，前端不保存 token
+const API_BASE_URL = '/api';
 const username = ref('');
 const password = ref('');
-const rememberMe = ref(false);
+const currentUser = ref(null);
 const isLoading = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
@@ -229,10 +228,28 @@ const testApiConnection = async () => {
     } catch (error) {
         apiTestResult.value = {
             success: false,
-            message: `❌ 無法連線到 Railway API: ${error.message}`
+            message: `❌ 無法連線到後端 API: ${error.message}`
         };
     }
 };
+
+// 只允許跳轉到本站路徑，避免 returnUrl 被利用成開放轉址
+const safeReturnUrl = () => {
+    const url = new URLSearchParams(window.location.search).get('returnUrl');
+    return url && url.startsWith('/') && !url.startsWith('//') ? url : null;
+};
+
+// 進入頁面時確認是否已登入
+onMounted(async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, { credentials: 'same-origin' });
+        if (response.ok) {
+            currentUser.value = (await response.json()).username;
+        }
+    } catch {
+        // 後端無法連線時維持未登入狀態
+    }
+});
 
 // 登入處理
 const handleLogin = async () => {
@@ -241,54 +258,49 @@ const handleLogin = async () => {
         successMessage.value = '';
         isLoading.value = true;
 
-        // 呼叫 Railway Spring Boot API
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 username: username.value,
                 password: password.value,
-                rememberMe: rememberMe.value
             }),
         });
 
-        // 檢查回應狀態
+        const data = await response.json().catch(() => ({}));
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: '登入失敗' }));
-            throw new Error(errorData.message || `HTTP ${response.status}: 登入失敗`);
-        }
-        
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || '登入失敗，請檢查帳號密碼');
+            throw new Error(data.message || `HTTP ${response.status}: 登入失敗`);
         }
 
-        // 保存認證資訊
-        if (data.token) {
-            localStorage.setItem('auth_token', data.token);
-        }
-        
-        if (data.user) {
-            localStorage.setItem('user_info', JSON.stringify(data.user));
-        }
+        currentUser.value = data.username;
+        password.value = '';
 
-        // 顯示成功訊息
-        successMessage.value = '登入成功!正在跳轉...';
-
-        // 延遲跳轉,讓使用者看到成功訊息
-        setTimeout(() => {
-        const returnUrl = new URLSearchParams(window.location.search).get('returnUrl');
-        window.location.href = returnUrl || '/';
-        }, 1000);
+        const returnUrl = safeReturnUrl();
+        if (returnUrl) {
+            successMessage.value = '登入成功！正在跳轉...';
+            setTimeout(() => {
+                window.location.href = returnUrl;
+            }, 1000);
+        } else {
+            successMessage.value = '登入成功！';
+        }
     } catch (error) {
         console.error('登入錯誤:', error);
         errorMessage.value = error.message || '登入失敗，請檢查帳號密碼';
     } finally {
         isLoading.value = false;
     }
+};
+
+// 登出處理
+const handleLogout = async () => {
+    await fetch(`${API_BASE_URL}/auth/logout`, { method: 'POST', credentials: 'same-origin' }).catch(() => {});
+    currentUser.value = null;
+    successMessage.value = '已登出';
+    errorMessage.value = '';
 };
 </script>
 

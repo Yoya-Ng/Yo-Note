@@ -4,11 +4,12 @@ import { markdownify } from "@lib/textConverter";
 import LoginForm from "@components/login/LoginForm.vue";
 
 const title = "登入";
-const description = "請輸入您的帳號密碼進行登入";
+const description = "站長管理登入";
 ---
 
-<BaseLayout title={title} description={description}>
-  <section class="section">
+<!-- 只給站長使用：不讓搜尋引擎收錄，也不進站內搜尋索引 -->
+<BaseLayout title={title} description={description} noindex={true}>
+  <section class="section" data-pagefind-ignore="all">
     <div class="container">
       <div class="row justify-center">
         <div class="text-center md:text-left lg:col-6">

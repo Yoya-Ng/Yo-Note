@@ -22,4 +22,5 @@ Rules:
 - 部署：push 到 `main` 由 Netlify 自動 build；設定在 `netlify.toml`（Node 22），優先於後台設定。
 - `.astro` 頁面第一行必須是 `---`，註解要放在 frontmatter 內，否則 import 失效、整站 build 失敗。
 - 版面寬度：全站用 `.container`（1200px）；只有使用者要求的頁面才個別放寬（改用 `mx-auto w-full max-w-[...] px-4`），不要改全站設定。
-- 登入相關程式（`src/components/login/*`、`ProtectedRoute.vue`、`Navigation.vue`、`UserProfile.vue`）暫停開發，後端尚無 `/auth` API；不要新增依賴它的頁面。
+- 登入只給站長使用：`/login`（`LoginForm.vue`）呼叫同網域的 `/api/auth/*`，登入狀態是後端的 HttpOnly session cookie，前端不存 token、不用 `localStorage`。沒有註冊、忘記密碼與角色分級。
+- `/api/*` 代理：本機由 `astro.config.mjs` 的 vite proxy 轉到 `API_PROXY_TARGET`（預設 `http://localhost:8080`）；正式環境由 `netlify.toml` 的 redirect 轉到 Railway（網址需手動填入）。`npm run dev` 時 Pagefind 搜尋沒有索引，要 build 後用 `astro preview` 測。
