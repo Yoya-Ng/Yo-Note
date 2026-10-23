@@ -12,10 +12,26 @@
              class="success-message mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded">
             <p class="font-medium">{{ successMessage }}</p>
         </div>
-        
+
+        <!-- 後端休眠喚醒中提示 -->
+        <div v-if="wakeMessage"
+             role="status"
+             class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded">
+            <p class="text-sm">{{ wakeMessage }}</p>
+        </div>
+
         <!-- 已登入 -->
         <div v-if="currentUser" class="text-center">
             <p class="mb-6">已登入：<span class="font-semibold">{{ currentUser }}</span></p>
+            <button type="button"
+                    @click="testDataService"
+                    :disabled="isDataTesting"
+                    class="w-full mb-3 py-3 px-4 bg-gray-200 hover:bg-gray-300 dark:bg-darkmode-bg-s rounded-lg transition duration-200 disabled:opacity-70">
+                {{ isDataTesting ? '測試中...' : '測試資料服務（Spring Boot → Python → Neon）' }}
+            </button>
+            <pre v-if="dataTestResult"
+                 class="mb-6 p-3 text-left text-xs whitespace-pre-wrap break-all rounded"
+                 :class="dataTestResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-700'">{{ dataTestResult.message }}</pre>
             <button type="button"
                     @click="handleLogout"
                     class="w-full py-3 px-4 bg-gray-200 hover:bg-gray-300 dark:bg-darkmode-bg-s rounded-lg transition duration-200">
@@ -197,6 +213,43 @@ const errorMessage = ref('');
 const successMessage = ref('');
 const showPassword = ref(false);
 const apiTestResult = ref(null);
+const wakeMessage = ref('');
+const isDataTesting = ref(false);
+const dataTestResult = ref(null);
+
+// 後端在 Railway 閒置時會休眠，喚醒期間代理會回 502／503／504（不是後端自己的 JSON）或連線失敗。
+// 這種情況間隔重試，最多等約 30 秒；後端自己回的錯誤（401、429、JSON 格式的 5xx）不重試。
+// 登入 POST 也可以重試：喚醒中的 5xx 代表請求沒送到後端，不會被算成登入失敗。
+const WAKE_RETRY_DELAYS_MS = [1000, 2000, 4000, 8000, 8000, 8000];
+
+const isWakingResponse = (response) =>
+    [502, 503, 504].includes(response.status)
+    && !(response.headers.get('content-type') || '').includes('application/json');
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const fetchWithWake = async (url, options) => {
+    try {
+        for (let attempt = 0; ; attempt++) {
+            let response = null;
+            let networkError = null;
+            try {
+                response = await fetch(url, options);
+            } catch (error) {
+                networkError = error;
+            }
+            const waking = networkError || isWakingResponse(response);
+            if (!waking || attempt >= WAKE_RETRY_DELAYS_MS.length) {
+                if (networkError) throw networkError;
+                return response;
+            }
+            wakeMessage.value = '後端喚醒中，約需 10–20 秒，請稍候…';
+            await sleep(WAKE_RETRY_DELAYS_MS[attempt]);
+        }
+    } finally {
+        wakeMessage.value = '';
+    }
+};
 
 const togglePasswordVisibility = () => {
     showPassword.value = !showPassword.value;
@@ -206,7 +259,7 @@ const togglePasswordVisibility = () => {
 const testApiConnection = async () => {
     try {
         apiTestResult.value = null;
-        const response = await fetch(`${API_BASE_URL}/hello`, {
+        const response = await fetchWithWake(`${API_BASE_URL}/hello`, {
             method: 'GET' // 明確指定為 GET
         });
         
@@ -242,7 +295,7 @@ const safeReturnUrl = () => {
 // 進入頁面時確認是否已登入
 onMounted(async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/auth/me`, { credentials: 'same-origin' });
+        const response = await fetchWithWake(`${API_BASE_URL}/auth/me`, { credentials: 'same-origin' });
         if (response.ok) {
             currentUser.value = (await response.json()).username;
         }
@@ -258,7 +311,7 @@ const handleLogin = async () => {
         successMessage.value = '';
         isLoading.value = true;
 
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        const response = await fetchWithWake(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
@@ -297,10 +350,33 @@ const handleLogin = async () => {
 
 // 登出處理
 const handleLogout = async () => {
-    await fetch(`${API_BASE_URL}/auth/logout`, { method: 'POST', credentials: 'same-origin' }).catch(() => {});
+    await fetchWithWake(`${API_BASE_URL}/auth/logout`, { method: 'POST', credentials: 'same-origin' }).catch(() => {});
     currentUser.value = null;
     successMessage.value = '已登出';
     errorMessage.value = '';
+    dataTestResult.value = null;
+};
+
+// 測試整條鏈路：Spring Boot → Python 資料服務 → Neon（需登入）
+const testDataService = async () => {
+    isDataTesting.value = true;
+    dataTestResult.value = null;
+    try {
+        const response = await fetchWithWake(`${API_BASE_URL}/data/ping`, { credentials: 'same-origin' });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+            currentUser.value = null;
+            dataTestResult.value = { success: false, message: '登入已失效，請重新登入' };
+        } else if (!response.ok) {
+            dataTestResult.value = { success: false, message: data.message || `HTTP ${response.status}` };
+        } else {
+            dataTestResult.value = { success: true, message: JSON.stringify(data, null, 2) };
+        }
+    } catch (error) {
+        dataTestResult.value = { success: false, message: `無法連線到後端：${error.message}` };
+    } finally {
+        isDataTesting.value = false;
+    }
 };
 </script>
 
